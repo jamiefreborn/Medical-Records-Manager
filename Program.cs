@@ -7,13 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ── 1. Database ──────────────────────────────────────────────
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
 string connectionString;
 
-if (!string.IsNullOrEmpty(databaseUrl))
+if (!string.IsNullOrWhiteSpace(databaseUrl) && databaseUrl.StartsWith("postgres"))
 {
     var uri = new Uri(databaseUrl);
     var userInfo = uri.UserInfo.Split(':');
-
     int Port = uri.Port > 0 ? uri.Port : 5432;
 
     connectionString =

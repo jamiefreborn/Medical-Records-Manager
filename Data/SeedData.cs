@@ -11,7 +11,7 @@ namespace MedicalRecordsManager.Data
             var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
             // Create Roles
-            string[] roles = { "Admin", "Doctor", "Nurse" };
+            string[] roles = { "Admin", "Doctor", "Nurse", "Accountant" };
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))

@@ -6,7 +6,7 @@ using MedicalRecordsManager.Models;
 
 namespace MedicalRecordsManager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Doctor,Nurse")]
     public class LabResultsController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -74,7 +74,7 @@ namespace MedicalRecordsManager.Controllers
         }
 
         // GET: /LabResults/Delete/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Doctor,Nurse")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _db.LabResults.FindAsync(id);

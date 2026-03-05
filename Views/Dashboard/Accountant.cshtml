@@ -1,0 +1,33 @@
+﻿<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card text-white shadow-sm border-0"
+             style="background:#2E7D32;">
+            <div class="card-body text-center">
+                <h6>Total Revenue</h6>
+                <h2 class="fw-bold">$@ViewBag.TotalPayments</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white shadow-sm border-0"
+             style="background:#F9A825;">
+            <div class="card-body text-center">
+                <h6>Pending Payments</h6>
+                <h2 class="fw-bold">@ViewBag.PendingPayments</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white shadow-sm border-0"
+             style="background:#00897B;">
+            <div class="card-body text-center">
+                <h6>Gift Card Payments</h6>
+                <h2 class="fw-bold">@ViewBag.GiftCardPayments</h2>
+            </div>
+        </div>
+    </div>
+
+</div>

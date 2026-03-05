@@ -13,7 +13,7 @@ namespace MedicalRecordsManager.Models
         public string Status { get; set; } = "Pending";
         public DateTime TestedAt { get; set; } = DateTime.UtcNow;
 
-        public Patient Patient { get; set; } = null!;
-        public MedicalRecord MedicalRecord { get; set; } = null!;
+        public Patient? Patient { get; set; }
+        public MedicalRecord? MedicalRecord { get; set; }
     }
 }

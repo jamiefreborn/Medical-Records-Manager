@@ -38,7 +38,26 @@ namespace MedicalRecordsManager.Controllers
                 email, password, rememberMe, lockoutOnFailure: false);
 
             if (result.Succeeded)
-                return LocalRedirect(returnUrl ?? "/");
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+
+                if (user != null)
+                {
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                        return RedirectToAction("Index", "Home");
+
+                    if (await _userManager.IsInRoleAsync(user, "Doctor"))
+                        return RedirectToAction("Doctor", "Dashboard");
+
+                    if (await _userManager.IsInRoleAsync(user, "Nurse"))
+                        return RedirectToAction("Nurse", "Dashboard");
+
+                    if (await _userManager.IsInRoleAsync(user, "Accountant"))
+                        return RedirectToAction("Accountant", "Dashboard");
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
 
             ViewData["Error"] = "Invalid email or password.";
             return View();

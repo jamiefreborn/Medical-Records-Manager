@@ -20,7 +20,7 @@ namespace MedicalRecordsManager.Models
         public string? Notes { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public Patient Patient { get; set; } = null!;
-        public ApplicationUser Doctor { get; set; } = null!;
+        public Patient? Patient { get; set; }
+        public ApplicationUser? Doctor { get; set; }
     }
 }

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MedicalRecordsManager.Models.GiftCard>
+
+@{
+    ViewData["Title"] = "Gift Cards";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold">🎁 Gift Cards</h3>
+
+        <a asp-action="Create" class="btn btn-success">
+            + Create Gift Card
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Code</th>
+                        <th>Original Amount</th>
+                        <th>Remaining Balance</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Expiry</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var g in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@g.Code</td>
+                            <td>@g.OriginalAmount</td>
+                            <td>@g.RemainingBalance</td>
+                            <td>
+                                <span class="badge @(g.IsActive ? "bg-success" : "bg-danger")">
+                                    @(g.IsActive ? "Active" : "Used/Inactive")
+                                </span>
+                            </td>
+                            <td>@g.CreatedAt.ToShortDateString()</td>
+                            <td>
+                                @(g.ExpiryDate.HasValue
+                                                            ? g.ExpiryDate.Value.ToShortDateString()
+                                                            : "-")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

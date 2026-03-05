@@ -1,0 +1,44 @@
+﻿@model MedicalRecordsManager.Models.GiftCard
+
+@{
+    ViewData["Title"] = "Create Gift Card";
+}
+
+<div class="container mt-4">
+
+    <h3 class="fw-bold mb-4">🎁 Create Gift Card</h3>
+
+    <div class="card shadow-sm p-4">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">
+                    Original Amount
+                </label>
+                <input asp-for="OriginalAmount"
+                       class="form-control"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">
+                    Expiry Date (Optional)
+                </label>
+                <input asp-for="ExpiryDate"
+                       type="date"
+                       class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                Save Gift Card
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary ms-2">
+                Cancel
+            </a>
+
+        </form>
+    </div>
+
+</div>

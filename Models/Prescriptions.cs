@@ -15,8 +15,8 @@ namespace MedicalRecordsManager.Models
         public string? Instructions { get; set; }
         public DateTime PrescribedAt { get; set; } = DateTime.UtcNow;
 
-        public MedicalRecord MedicalRecord { get; set; } = null!;
-        public Patient Patient { get; set; } = null!;
-        public ApplicationUser Doctor { get; set; } = null!;
+        public MedicalRecord? MedicalRecord { get; set; }
+        public Patient? Patient { get; set; }
+        public ApplicationUser? Doctor { get; set; }
     }
 }

@@ -8,6 +8,9 @@ namespace MedicalRecordsManager.Models
         public int Id { get; set; }
         public int PatientId { get; set; }
         public int? AppointmentId { get; set; }
+        
+        public int? GiftCardId { get; set; }
+        public GiftCard? GiftCard { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Amount { get; set; }
@@ -17,7 +20,7 @@ namespace MedicalRecordsManager.Models
         public string? ReceiptNumber { get; set; }
         public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
 
-        public Patient Patient { get; set; } = null!;
+        public Patient? Patient { get; set; }
         public Appointment? Appointment { get; set; }
     }
 }

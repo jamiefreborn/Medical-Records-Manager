@@ -36,22 +36,32 @@ namespace MedicalRecordsManager.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.Patients = await _db.Patients
-                .Where(p => p.IsActive).ToListAsync();
-            ViewBag.Doctors = await _userManager
+                .Where(p => p.IsActive)
+                .ToListAsync();
+
+            var doctors = await _userManager
                 .GetUsersInRoleAsync("Doctor");
-            return View();
+
+            ViewBag.Doctors = doctors
+                .Where(d => d.IsActive).ToList();
+
+              return View();
+
         }
 
-        // POST: /Appointments/Create
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Appointment model)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.Patients = await _db.Patients
-                    .Where(p => p.IsActive).ToListAsync();
+                    .Where(p => p.IsActive)
+                    .ToListAsync();
+
                 ViewBag.Doctors = await _userManager
                     .GetUsersInRoleAsync("Doctor");
+
                 return View(model);
             }
 
@@ -61,7 +71,6 @@ namespace MedicalRecordsManager.Controllers
             TempData["Success"] = "Appointment booked successfully.";
             return RedirectToAction(nameof(Index));
         }
-
         // POST: /Appointments/UpdateStatus
         [HttpPost]
         public async Task<IActionResult> UpdateStatus(int id, string status)
@@ -74,19 +83,44 @@ namespace MedicalRecordsManager.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
         // GET: /Appointments/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var appt = await _db.Appointments.FindAsync(id);
+
             if (appt != null)
             {
+                // Remove MedicalRecord links
+                var medicalRecords = await _db.MedicalRecords
+                    .Where(r => r.AppointmentId == id)
+                    .ToListAsync();
+
+                foreach (var record in medicalRecords)
+                {
+                    record.AppointmentId = null;
+                }
+
+                // Remove Payment links
+                var payments = await _db.Payments
+                    .Where(p => p.AppointmentId == id)
+                    .ToListAsync();
+
+                foreach (var payment in payments)
+                {
+                    payment.AppointmentId = null;
+                }
+
+                // Now delete appointment
                 _db.Appointments.Remove(appt);
+
                 await _db.SaveChangesAsync();
-                TempData["Success"] = "Appointment deleted.";
+
+                TempData["Success"] = "Appointment deleted successfully.";
             }
+
             return RedirectToAction(nameof(Index));
         }
+    
     }
 }

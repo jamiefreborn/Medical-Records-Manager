@@ -15,15 +15,18 @@ namespace MedicalRecordsManager.Data
         public DbSet<Prescriptions> Prescriptions { get; set; }
         public DbSet<LabResult> LabResults { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<GiftCard> GiftCards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            // Patient
             builder.Entity<Patient>()
                 .HasIndex(p => p.PatientNumber)
                 .IsUnique();
 
+            // Appointment
             builder.Entity<Appointment>()
                 .HasOne(a => a.Doctor)
                 .WithMany(u => u.Appointments)
@@ -36,6 +39,7 @@ namespace MedicalRecordsManager.Data
                 .HasForeignKey(a => a.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Medical Record
             builder.Entity<MedicalRecord>()
                 .HasOne(m => m.Doctor)
                 .WithMany(u => u.MedicalRecords)
@@ -54,6 +58,7 @@ namespace MedicalRecordsManager.Data
                 .HasForeignKey(m => m.AppointmentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Prescriptions
             builder.Entity<Prescriptions>()
                 .HasOne(p => p.MedicalRecord)
                 .WithMany(m => m.Prescriptions)
@@ -72,6 +77,7 @@ namespace MedicalRecordsManager.Data
                 .HasForeignKey(p => p.DoctorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Lab Results
             builder.Entity<LabResult>()
                 .HasOne(l => l.Patient)
                 .WithMany()
@@ -84,6 +90,7 @@ namespace MedicalRecordsManager.Data
                 .HasForeignKey(l => l.MedicalRecordId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Payments
             builder.Entity<Payment>()
                 .HasOne(p => p.Patient)
                 .WithMany(p => p.Payments)
@@ -95,6 +102,21 @@ namespace MedicalRecordsManager.Data
                 .WithMany()
                 .HasForeignKey(p => p.AppointmentId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Payment>()
+                .HasOne(p => p.GiftCard)
+                .WithMany()
+                .HasForeignKey(p => p.GiftCardId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // GiftCard Precision
+            builder.Entity<GiftCard>()
+                .Property(g => g.OriginalAmount)
+                .HasPrecision(18, 2);
+
+            builder.Entity<GiftCard>()
+                .Property(g => g.RemainingBalance)
+                .HasPrecision(18, 2);
         }
     }
 }

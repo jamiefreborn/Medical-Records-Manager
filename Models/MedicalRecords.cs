@@ -20,8 +20,8 @@ namespace MedicalRecordsManager.Models
         public string? Notes { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public Patient Patient { get; set; } = null!;
-        public ApplicationUser Doctor { get; set; } = null!;
+        public Patient? Patient { get; set; }
+        public ApplicationUser? Doctor { get; set; }
         public Appointment? Appointment { get; set; }
         public ICollection<Prescriptions> Prescriptions { get; set; } = new List<Prescriptions>();
         public ICollection<LabResult> LabResults { get; set; } = new List<LabResult>();

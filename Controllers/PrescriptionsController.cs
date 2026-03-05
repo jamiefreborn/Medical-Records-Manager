@@ -7,7 +7,7 @@ using MedicalRecordsManager.Models;
 
 namespace MedicalRecordsManager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Doctor")]
     public class PrescriptionsController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -48,19 +48,25 @@ namespace MedicalRecordsManager.Controllers
         }
 
         // POST: /Prescriptions/Create
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Doctor")]
         public async Task<IActionResult> Create(Prescriptions model)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.Patients = await _db.Patients
-                                             .Where(p => p.IsActive).ToListAsync();
-                ViewBag.Doctors = await _userManager.GetUsersInRoleAsync("Doctor");
+                    .Where(p => p.IsActive)
+                    .ToListAsync();
+
+                ViewBag.Doctors = await _userManager
+                    .GetUsersInRoleAsync("Doctor");
+
                 ViewBag.MedicalRecords = await _db.MedicalRecords
-                                             .Include(r => r.Patient)
-                                             .OrderByDescending(r => r.VisitDate)
-                                             .ToListAsync();
+                    .Include(r => r.Patient)
+                    .OrderByDescending(r => r.VisitDate)
+                    .ToListAsync();
+
                 return View(model);
             }
 
@@ -68,6 +74,7 @@ namespace MedicalRecordsManager.Controllers
             await _db.SaveChangesAsync();
 
             TempData["Success"] = "Prescription saved successfully.";
+
             return RedirectToAction(nameof(Index));
         }
     }

@@ -30,13 +30,21 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label fw-semibold">Payment Method *</label>
+                    <label class="form-label fw-semibold">
+                                                                      
+                        Method *</label>
                     <select name="PaymentMethod" class="form-select" required>
                         <option value="">-- Select --</option>
                         <option>Cash</option>
                         <option>Card</option>
                         <option>Insurance</option>
+                        <option>GiftCard</option>
                     </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Gift Card Code (Optional)</label>
+                    <input type="text" name="GiftCardCode" class="form-control"
+                           placeholder="Enter gift card code if applicable" />
                 </div>
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">Status</label>

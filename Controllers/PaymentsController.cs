@@ -6,7 +6,7 @@ using MedicalRecordsManager.Models;
 
 namespace MedicalRecordsManager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Accountant")]
     public class PaymentsController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -39,18 +39,62 @@ namespace MedicalRecordsManager.Controllers
 
         // POST: /Payments/Create
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Payment model)
+        public async Task<IActionResult> Create(Payment model, string? GiftCardCode)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.Patients = await _db.Patients
-                                           .Where(p => p.IsActive).ToListAsync();
+                    .Where(p => p.IsActive).ToListAsync();
+
                 ViewBag.Appointments = await _db.Appointments
-                                           .Include(a => a.Patient)
-                                           .Where(a => a.Status == "Completed")
-                                           .ToListAsync();
+                    .Include(a => a.Patient)
+                    .Where(a => a.Status == "Completed")
+                    .ToListAsync();
+
                 return View(model);
             }
+
+            // ───── Gift Card Handling ─────
+            if (!string.IsNullOrWhiteSpace(GiftCardCode))
+            {
+                var giftCard = await _db.GiftCards
+                    .FirstOrDefaultAsync(g => g.Code == GiftCardCode);
+
+                if (giftCard == null)
+                {
+                    ModelState.AddModelError("", "Invalid gift card code.");
+                    return View(model);
+                }
+
+                if (!giftCard.IsActive)
+                {
+                    ModelState.AddModelError("", "Gift card is inactive.");
+                    return View(model);
+                }
+
+                if (giftCard.ExpiryDate.HasValue &&
+                    giftCard.ExpiryDate.Value < DateTime.UtcNow)
+                {
+                    ModelState.AddModelError("", "Gift card has expired.");
+                    return View(model);
+                }
+
+                if (giftCard.RemainingBalance < model.Amount)
+                {
+                    ModelState.AddModelError("", "Insufficient gift card balance.");
+                    return View(model);
+                }
+
+                // Deduct balance
+                giftCard.RemainingBalance -= model.Amount;
+
+                if (giftCard.RemainingBalance == 0)
+                    giftCard.IsActive = false;
+
+                model.GiftCardId = giftCard.Id;
+            }
+
+            model.PaymentDate = DateTime.UtcNow;
 
             _db.Payments.Add(model);
             await _db.SaveChangesAsync();

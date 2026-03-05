@@ -4,6 +4,7 @@ using MedicalRecordsManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Medical_Records_Manager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260302111519_AddGiftCard")]
+    partial class AddGiftCard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -360,9 +363,6 @@ namespace Medical_Records_Manager.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("GiftCardId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
@@ -383,8 +383,6 @@ namespace Medical_Records_Manager.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppointmentId");
-
-                    b.HasIndex("GiftCardId");
 
                     b.HasIndex("PatientId");
 
@@ -645,11 +643,6 @@ namespace Medical_Records_Manager.Migrations
                         .HasForeignKey("AppointmentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MedicalRecordsManager.Models.GiftCard", "GiftCard")
-                        .WithMany()
-                        .HasForeignKey("GiftCardId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("MedicalRecordsManager.Models.Patient", "Patient")
                         .WithMany("Payments")
                         .HasForeignKey("PatientId")
@@ -657,8 +650,6 @@ namespace Medical_Records_Manager.Migrations
                         .IsRequired();
 
                     b.Navigation("Appointment");
-
-                    b.Navigation("GiftCard");
 
                     b.Navigation("Patient");
                 });

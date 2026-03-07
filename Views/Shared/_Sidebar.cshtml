@@ -29,15 +29,21 @@
                 CLINICAL
             </small>
             
-            <a class="nav-link text-white rounded px-3 py-2 mb-1 sidebar-link"
-               asp-controller="Patients" asp-action="Index">
-                <i class="fas fa-user-injured me-2"></i> Patients
-            </a>
+            @if (User.IsInRole("Admin") || User.IsInRole("Doctor") || User.IsInRole("Nurse"))
+            {
+                <a class="nav-link text-white rounded px-3 py-2 mb-1 sidebar-link"
+                   asp-controller="Patients" asp-action="Index">
+                    <i class="fas fa-user-injured me-2"></i> Patients
+                </a>
+            }
 
-            <a class="nav-link text-white rounded px-3 py-2 mb-1 sidebar-link"
-               asp-controller="Appointments" asp-action="Index">
-                <i class="fas fa-calendar-check me-2"></i> Appointments
-            </a>
+            @if (User.IsInRole("Admin") || User.IsInRole("Doctor") || User.IsInRole("Nurse"))
+            {
+                <a class="nav-link text-white rounded px-3 py-2 mb-1 sidebar-link"
+                   asp-controller="Appointments" asp-action="Index">
+                    <i class="fas fa-calendar-check me-2"></i> Appointments
+                </a>
+            }
 
             @if (User.IsInRole("Admin") || User.IsInRole("Doctor"))
             {
